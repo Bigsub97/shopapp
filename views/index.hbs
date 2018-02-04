@@ -76,7 +76,51 @@
     </div>
 </div>
 <script>
+    $(function(){
+        (function(){
+             $.get('/allpros',(pros)=>{
+            let r=''
+            let q=''
+            $('#main').empty()
+            
+            for(let i=0;i<pros.length;i++){
+                r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">${pros[i].name}</h5>
+                    <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                    <p class="card-text">Price- ${pros[i].price}</p>
+                    <p class="card-text">Category- ${pros[i].cat}
+                    </p>
+                </div>
+                </div><br/>
+            </div>`
+            q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+            <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+            <div class="card-body" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
+                <h5 class="card-title">${pros[i].name}</h5>
+                <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                <p class="card-text">Price- ${pros[i].price}</p>
+                <p class="card-text">Category- ${pros[i].cat}
+                </p>
+                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
+            </div>
+            </div>
+            <br/>
+        </div>`
+            }
+            
+            $('#main').append(r)
+        })
+            window.addtocart=function(e){
+            $.get(`/addcart?uid=${$('#uid').text()}&name=${$(e).parent().attr('name')}&vendor=${$(e).parent().attr('vendor')}&price=${$(e).parent().attr('price')}&cat=${$(e).parent().attr('cat')}`,(something)=>{
     
+            })
+         }
+        })()
+    })
 </script>
 </body>
 </html>

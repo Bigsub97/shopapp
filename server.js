@@ -93,22 +93,22 @@ app.get('/getcart',(req,res)=>{
     }).catch((err)=>res.send('Error getting cart'))
 })
 
-app.get('/checkuser',(req,res)=>{
+// app.get('/checkuser',(req,res)=>{
     
-    User.findOne({
-        where:{
-            username:req.query.uname
-        }}
-    ).then((user)=>{
-        console.log(user)
-        if(user){
-            res.send(true)
-        }
-        else{
-            res.send(false)
-        }
-    }).catch((err)=>res.send('Error checking user'))
-})
+//     User.findOne({
+//         where:{
+//             username:req.query.uname
+//         }}
+//     ).then((user)=>{
+//         console.log(user)
+//         if(user){
+//             res.send(true)
+//         }
+//         else{
+//             res.send(false)
+//         }
+//     }).catch((err)=>res.send('Error checking user'))
+// })
 
 app.get('/rem',(req,res)=>{
     Usercart.destroy({
