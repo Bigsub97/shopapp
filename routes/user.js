@@ -12,6 +12,7 @@ route.post('/signup', (req, res) => {
         password: req.body.password,
         address:req.body.addr,
         mobno:req.body.mobno,
+        role:req.body.username
     }).then((user) => {
         res.redirect('/user/signin')
     })
