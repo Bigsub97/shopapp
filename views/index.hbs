@@ -105,7 +105,6 @@
                 <p class="card-text">Price- ${pros[i].price}</p>
                 <p class="card-text">Category- ${pros[i].cat}
                 </p>
-                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
             </div>
             </div>
             <br/>
@@ -114,11 +113,7 @@
             
             $('#main').append(r)
         })
-            window.addtocart=function(e){
-            $.get(`/addcart?uid=${$('#uid').text()}&name=${$(e).parent().attr('name')}&vendor=${$(e).parent().attr('vendor')}&price=${$(e).parent().attr('price')}&cat=${$(e).parent().attr('cat')}`,(something)=>{
-    
-            })
-         }
+           
         })()
     })
 </script>
