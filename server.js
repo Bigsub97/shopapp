@@ -24,7 +24,7 @@ app.set('view engine', 'hbs')
 app.use('/user', require('./routes/user'))
 app.use('/admin', require('./routes/admin'))
 
-app.get('/', (r,s) => s.render('index'))
+
 
 
 
@@ -100,6 +100,7 @@ app.get('/checkuser',(req,res)=>{
             username:req.query.uname
         }}
     ).then((user)=>{
+        console.log(user)
         if(user){
             res.send(true)
         }
@@ -214,7 +215,7 @@ app.get('/delfromucart',(req,res)=>{
        res.send('deleted')
     }).catch((err)=>res.send('Error deleting from user cart'))
 })
-
+app.get('/', (r,s) => s.render('index'))
 app.listen(config.PORT, () => {
     console.log("Listening on port " + config.PORT);
   });
