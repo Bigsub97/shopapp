@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Shop</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    {{!-- <script src="script.js"></script> --}}
+    
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+                            <h3 class="navbar-brand" style="font-size:22px">Shopping app</h3>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                          
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                              <ul class="navbar-nav mr-auto" id="ad">
+                                <li class="nav-item active">
+                                  <a class="nav-link"><span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link"></a>
+                                </li>
+                                
+                                <li class="nav-item">
+                                  <a class="nav-link disabled"></a>
+                                </li>
+                                {{#if isAdmin}}
+                                <li class="nav-item dropdown">
+                                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+                                    ADMIN pages
+                                   </a>
+                                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/admin/categories">Categories</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/admin/products">Products</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/admin/requests">Requests</a>
+                                  </div>
+                                </li>
+                                {{/if}}
+                              </ul>
+                              
+    <span style="visibility: hidden;height:0px" id="uid">{{user.id}}</span>
+                              <form class="form-inline my-2 my-lg-0">
+                                  <a href="/" class="btn btn-warning">Logout</a>&nbsp;&nbsp;&nbsp;
+                                  <a href="/cart" class="btn btn-success">Go to cart</a>&nbsp;&nbsp;&nbsp;
+                                <h5>Hello <span id="uname">{{user.username}}</span></h5>
+                              </form>
+                            </div>
+                    </nav>
+    <br/>
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-8">
+                
+                            <select class="custom-select" id="srch"></select>&nbsp;
+                            <button class="btn btn-outline-secondary my-2 my-sm-0" id="srchbtn">Search by category</button>
+                            
+            </div>
+            <div class="col"></div>
+        </div>
+    </div><br/><br/>
+    <div class="container border border-success" id="srchcon" style="visibility:hidden">
+        <div class="row"> &nbsp;Search results</div>
+        <div class="row pt-3" id="srchmain">
+
+        </div>
+    </div><br/><br/>
+    
+
+<div class="container">
+    <div class="row" id="main">
+        
+    </div>
+</div>
+<script>
+    $(function(){
+        (function(){
+             $.get('/allpros',(pros)=>{
+            let r=''
+            let q=''
+            $('#pros').empty()
+            $('#main').empty()
+            
+            for(let i=0;i<pros.length;i++){
+                r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">${pros[i].name}</h5>
+                    <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                    <p class="card-text">Price- ${pros[i].price}</p>
+                    <p class="card-text">Category- ${pros[i].cat}
+                    </p>
+                </div>
+                </div><br/>
+            </div>`
+            q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+            <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+            <div class="card-body" pid="${pros[i].id}" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
+                <h5 class="card-title">${pros[i].name}</h5>
+                <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                <p class="card-text">Price- ${pros[i].price}</p>
+                <p class="card-text">Category- ${pros[i].cat}
+                </p>
+                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
+            </div>
+            </div>
+            <br/>
+        </div>`
+            }
+            $('#pros').append(r)
+            $('#main').append(q)
+        })
+            $.get('/allcats',(cats)=>{
+             let p=''
+             for(let i=0;i<cats.length;i++){
+                 p+=`<option>${cats[i].catName}</option>
+                 `
+             }
+             $('#srch').append(p)
+         })
+          window.addtocart=function(e){
+                console.log(`pid=${$(e).parent().attr('pid')}`)
+            $.get(`/addcart?pid=${$(e).parent().attr('pid')}&uid=${$('#uid').text()}&name=${$(e).parent().attr('name')}&vendor=${$(e).parent().attr('vendor')}&price=${$(e).parent().attr('price')}&cat=${$(e).parent().attr('cat')}`,(something)=>{
+                console.log(something)
+            })
+         }
+        })()
+       $('#srchbtn').click(function(){
+           $('#srchmain').empty()
+           $.get(`/getbycat?catname=${$('#srch').val()}`,(pros)=>{
+               let y=''
+               for(let i=0;i<pros.length;i++){
+                   y+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+            <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+            <div class="card-body" pid="${pros[i].id}" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
+                <h5 class="card-title">${pros[i].name}</h5>
+                <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                <p class="card-text">Price- ${pros[i].price}</p>
+                <p class="card-text">Category- ${pros[i].cat}
+                </p>
+                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
+            </div>
+            </div>
+            <br/>
+        </div>
+                   `
+               }
+               $('#srchcon').css('visibility','visible')
+               $('#srchmain').html(y)
+           })
+       })
+         
+    })
+</script>
+</body>
+</html>

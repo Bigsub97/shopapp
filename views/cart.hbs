@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Cart</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    
+    {{!-- <script src="script.js"></script> --}}
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+                            <h3 class="navbar-brand" style="font-size:22px">Shopping app</h3>
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                              <span class="navbar-toggler-icon"></span>
+                            </button>
+                          
+                            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                              <ul class="navbar-nav mr-auto">
+                                <li class="nav-item active">
+                                  <a class="nav-link"><span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link"></a>
+                                </li>
+                                <li class="nav-item dropdown">
+                                  {{!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> --}}
+                                    
+                                  {{!-- </a> --}}
+                                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item"></a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"></a>
+                                  </div>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link disabled"></a>
+                                </li><span style="visibility: hidden;height:0px" id="uid">{{user.id}}</span>
+                              </ul>
+                              <form class="form-inline my-2 my-lg-0">
+                                <a href="/bill" class="btn btn-info">Buy</a>&nbsp;&nbsp;&nbsp;
+                                <h4>Cart</h4>
+                                
+                              </form>
+                            </div>
+                    </nav><br/>
+<div class="container" id="mycart">
+    {{!--  --}}
+    {{!-- <div class="alert alert-warning" role="alert">
+  <div class="row">
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+      <div class="col"></div>
+    </div>
+  </div> --}}
+    
+    {{!--  --}}
+</div>
+<script>
+    $(function(){
+        (function(){
+            $.get(`/getcart?uid=${$('#uid').text()}`,(cart)=>{
+            let f=''
+            for(let i=0;i<cart.length;i++){
+                // if(cart[i].uid==parseInt($('#uid').text())){
+                    f+=`<div class="alert alert-warning" role="alert">
+                <div class="row">
+                    <div class="col">Name- ${cart[i].name}</div>
+                    <div class="col">Price- ${cart[i].price}</div>
+                    <div class="col">Tax- ${cart[i].tax}</div>
+                    <div class="col">Total- ${cart[i].total}</div>
+                    <div class="col"><button class="btn btn-danger" onclick=rem(this,${cart[i].id})>Remove</button></div>
+                  </div>
+                </div>`
+                
+                
+            }
+            $('#mycart').append(f)
+        })
+         window.rem=function(e,i){
+             $.get(`/rem?id=${i}`,(ele)=>{
+                 $(e).parent().parent().parent().remove()
+             })
+         }
+        })()
+    })
+</script>
+</body>
+</html>

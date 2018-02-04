@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Admin categories</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    {{!-- <script src="script.js"></script> --}}
+    
+</head>
+<body><br/>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <table class="table table-sm table-dark">
+                <thead>
+                    <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">User id</th>
+                    <th scope="col">Product id</th>
+                    <th scope="col">Total amount</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="kk">
+                    
+                </tbody>
+                </table>
+        </div>
+    </div>
+</div>
+<br/><br/>
+
+<script>
+    $(function(){
+        (function(){
+             $.get('/allreqs',(requests)=>{
+                 let s=''
+                 for(let i=0;i<requests.length;i++){
+                     s+=`<tr>
+                        <th scope="row">${i+1}</th>
+                        <td>${requests[i].uid}</td>
+                        <td>${requests[i].pid}</td>
+                        <td>${requests[i].total}</td>
+                        <td>${requests[i].createdAt}</td>
+                        <td><button class="btn btn-danger" onclick=remreq(this,${requests[i].id})>Remove</button></td>
+                        </tr>
+                     `
+                 }
+                 $('#kk').append(s)
+             })
+             window.remreq=function(e,i){
+                 $(e).parent().parent().remove()
+                 $.get(`/delreq?id=${i}`,(x)=>{})
+             }
+        })()
+        
+    })
+</script>
+</body>
+</html>

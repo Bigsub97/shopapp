@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Admin products</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    
+    {{!-- <script src="script.js"></script> --}}
+</head>
+<body><br/><br/>
+<div class="container">
+    <div class="row" id="pros">
+        
+    </div>
+    
+</div><br/>
+<div class="container">
+    <div class="row text-center">
+        <div class="col"><input type="text" class="form-control" id="proname" placeholder="Product name"></div>
+        <div class="col"><input type="text" class="form-control" id="provendor" placeholder="Product vendor"></div>
+        
+    </div><br/>
+    <div class="row text-center">
+        <div class="col"><input type="number" class="form-control" id="proprice" placeholder="Product price"></div>
+        <div class="col">
+            <select class="custom-select" id="procat">
+            
+            </select>
+        </div>
+        
+    </div><br/>
+    <div class="row text-center">
+                <div class="col"><input type="text" class="form-control" id="imgurl" placeholder="Image url"></div>
+
+        <div class="col"><button class="btn btn-primary" id="addpro">Add product</button></div>
+        
+        
+    </div>
+</div><br/><br/>
+<script>
+    $(function(){
+        (function(){
+             $.get('/allcats',(cats)=>{
+            let str=''
+            let p=''
+            $('#cats').empty()
+            $('#procat').empty()
+            for(let i=0;i<cats.length;i++){
+                str+=`<div class="alert alert-primary" role="alert">
+                <div class="row">
+                <div class="col-6">${cats[i].catName}</div>
+                <div class="col-3">${cats[i].taxper}%</div>
+            </div></div>
+                `
+                if(i==0){
+                    p+=`<option selected>${cats[i].catName}</option>`
+                }
+                else{
+                    p+=`<option>${cats[i].catName}</option>`
+                }
+            }
+            $('#cats').append(str)
+            $('#procat').append(p)
+        })
+        $.get('/allpros',(pros)=>{
+            let r=''
+            let q=''
+            $('#pros').empty()
+            $('#main').empty()
+            
+            for(let i=0;i<pros.length;i++){
+                r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+                <div class="card" style="width: 18rem;">
+                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Name- ${pros[i].name}</h5>
+                    <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                    <p class="card-text">Price- ${pros[i].price}</p>
+                    <p class="card-text">Category- ${pros[i].cat}
+                    </p>
+                    <p class="card-text"><button class="btn btn-danger" onclick=delpro(this,${pros[i].id})>Delete</button>
+                </p>
+                </div>
+                </div><br/>
+            </div>`
+            q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+            <div class="card" style="width: 18rem;">
+             <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
+            <div class="card-body" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
+                <h5 class="card-title">Name- ${pros[i].name}</h5>
+                <p class="card-text">Vendor- ${pros[i].vendor}</p>
+                <p class="card-text">Price- ${pros[i].price}</p>
+                <p class="card-text">Category- ${pros[i].cat}
+                </p>
+                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
+            </div>
+            </div>
+            <br/>
+        </div>`
+            }
+            $('#pros').append(r)
+            $('#main').append(q)
+        })
+        
+        })()
+        $('#addpro').click(function(){
+        $.get(`/addpro?imgurl=${$('#imgurl').val()}&name=${$('#proname').val()}&vendor=${$('#provendor').val()}&price=${$('#proprice').val()}&cat=${$('#procat').val()}`,(proa)=>{
+            $('#pros').append(`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+            <div class="card" style="width: 18rem;">
+                 <img class="card-img-top" src="${proa.imgurl}" style="width:100%" alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title">Name- ${proa.name}</h5>
+                <p class="card-text">Vendor- ${proa.vendor}</p>
+                <p class="card-text">Price- ${proa.price}</p>
+                <p class="card-text">Category- ${proa.cat}
+                </p>
+                <p class="card-text"><button class="btn btn-danger" onclick=delpro(this,${proa.id})>Delete</button>
+                </p>
+            </div>
+            </div>
+        </div>`)
+        })
+    })
+    window.delpro=function(e,i){
+        $(e).parent().parent().parent().parent().remove()
+        $.get(`/delpro?id=${i}`,(x)=>{})
+        $.get(`/delfromucart?id=${i}`,(x)=>{console.log('deleted in ucart')})
+    }
+    })
+</script>
+</body>
+</html>
