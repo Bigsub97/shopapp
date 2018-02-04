@@ -9,6 +9,7 @@ const Categories = require('./db/models').Categories
 const Usercart = require('./db/models').Usercart
 const User = require('./db/models').User
 const Requests = require('./db/models').Requests
+const config = require('./config');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
@@ -214,4 +215,6 @@ app.get('/delfromucart',(req,res)=>{
     }).catch((err)=>res.send('Error deleting from user cart'))
 })
 
-app.listen(4002, () => console.log("server on port 4002"))
+app.listen(config.PORT, () => {
+    console.log("Listening on port " + config.PORT);
+  });

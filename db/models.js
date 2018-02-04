@@ -1,9 +1,8 @@
 const Sequelize = require('sequelize')
 const DataTypes = Sequelize.DataTypes
+const config = require('../config')
 
-const db = new Sequelize('shop', 'shopper', 'shoppass', {
-    dialect: 'mysql'
-})
+const db = new Sequelize(config.DATABASE_URL);
 const User = db.define('users',{
     id: {
         type: DataTypes.INTEGER,
