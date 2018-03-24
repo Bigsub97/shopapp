@@ -9,6 +9,7 @@ const Categories = require('./db/models').Categories
 const Usercart = require('./db/models').Usercart
 const User = require('./db/models').User
 const Requests = require('./db/models').Requests
+const Notifications = require('./db/models').Notifications
 const config = require('./config');
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
@@ -30,6 +31,21 @@ app.use('/admin', require('./routes/admin'))
 
 app.use('/',express.static(__dirname+'/views'))
 app.use('/admin',express.static(__dirname+'/views'))
+
+app.get('/getnot',(req,res)=>{
+    Notifications.findAll({
+        where:{
+            uid: req.query.uid
+        }}
+    ).then(
+        (nots)=>{
+            res.send(nots)
+        }
+    ).catch((err)=>res.send('Error getting notifications'))
+})
+
+
+
 app.get('/addcat',(req,res)=>{
     Categories.create({
         catName:req.query.name,
@@ -59,8 +75,9 @@ app.get('/addpro',(req,res)=>{
     }).catch((err)=>res.send('Error adding product'))
 })
 
-
+app.get('/', (r,s) => s.render('index'))
 cart=[]
+
 app.get('/addcart',(req,res)=>{
     console.log(req.query.pid)
     Categories.findOne({
@@ -215,7 +232,64 @@ app.get('/delfromucart',(req,res)=>{
        res.send('deleted')
     }).catch((err)=>res.send('Error deleting from user cart'))
 })
-app.get('/', (r,s) => s.render('index'))
+app.get('/delnot',(req,res)=>{
+    Notifications.destroy({
+        where:{
+            notid:parseInt(req.query.id)
+        }
+    }).then(()=>{
+        res.send('deleted')
+    }).catch((err)=>res.send('Error deleting notification'))
+})
+app.get('/sendnot',(req,res)=>{
+    Notifications.create({
+        uid: parseInt(req.query.usid),
+        message: req.query.msg
+    }).then((x)=>{
+        res.send(x)
+    }).catch((err)=>{
+        console.log('Error sending notification')
+    })
+})
+app.get('/clearnots',(req,res)=>{
+    Notifications.destroy({
+        where:{
+            uid:parseInt(req.query.id)
+        }
+    }).then(()=>{
+        res.send('Cleared notifications')
+    }).catch((err)=>{
+        console.log('Error clearing notifications')
+    })
+})
+app.get('/getnots',(req,res)=>{
+    Notifications.findAll({
+        where:{
+            uid: req.query.uid
+        }
+    }).then((nots)=>{
+        res.send(nots)
+    }).catch((err)=>{
+        console.log('Error getting notifications')
+    })
+})
+app.get('/sendall',(req,res)=>{
+    User.findAll().then((users)=>{
+        for(let i=0;i<users.length;i++){
+            Notifications.create({
+                uid: parseInt(users[i].id),
+                message: req.query.msg
+            }).then((x)=>{
+                console.log('Sent')
+            }).catch((err)=>{
+                console.log('Error sending notification to all users')
+            })
+        }
+        res.send('Sent')
+    }).catch((err)=>{
+        console.log('Error finding users')
+    })
+})
 app.listen(config.PORT, () => {
     console.log("Listening on port " + config.PORT);
   });

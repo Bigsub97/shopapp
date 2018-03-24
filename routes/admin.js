@@ -4,6 +4,7 @@ const Categories = require('../db/models').Categories
 const Products = require('../db/models').Products
 const Users = require('../db/models').Users
 const Requests = require('../db/models').Requests
+const Notifications = require('../db/models').Notifications
 
 route.get('/categories', (req, res) => {
     if(!req.user){
@@ -49,7 +50,16 @@ route.get('/requests', (req, res) => {
     )
     
 })
-
+route.get('/notifications', (req, res) => {
+    if(!req.user){
+        res.redirect('/user/signin')
+    }
+    else if(req.user.role!="admin"){
+        res.redirect('/shop')
+    }
+    res.render('adminnot')
+    
+})
 
 
 exports = module.exports = route

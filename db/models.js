@@ -23,6 +23,15 @@ const User = db.define('users',{
     },
     password:DataTypes.STRING
 })
+const Notifications = db.define('notifications',{
+    notid: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    uid: DataTypes.INTEGER,
+    message: DataTypes.STRING
+})
 const Usercart = db.define('usercart',{
     id: {
         type: DataTypes.INTEGER,
@@ -79,5 +88,5 @@ Products.belongsTo(Categories);
 db.sync({alter:true}).then(() => "Database created")
 
 exports = module.exports = {
-    Categories,Products,User,Usercart,Requests
+    Categories,Products,User,Usercart,Requests,Notifications
 }

@@ -9,12 +9,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     {{!-- <script src="script.js"></script> --}}
     
 </head>
 <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
                             <h3 class="navbar-brand" style="font-size:22px">Shopping app</h3>
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                               <span class="navbar-toggler-icon"></span>
@@ -30,7 +31,7 @@
                                 </li>
                                 
                                 <li class="nav-item">
-                                  <a class="nav-link disabled"></a>
+                                  
                                 </li>
                                 {{#if isAdmin}}
                                 <li class="nav-item dropdown">
@@ -43,34 +44,38 @@
                                     <a class="dropdown-item" href="/admin/products">Products</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="/admin/requests">Requests</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="/admin/notifications">Notifications</a>
                                   </div>
                                 </li>
                                 {{/if}}
                               </ul>
+                              <div class="btn-group">
+                                            <button id="noti" type="button" class="btn btn-secondary">Notifications</button>
+                                            <button id="drop" type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <span class="sr-only">Toggle Dropdown</span>
+                                            </button>
+                                            <div class="dropdown-menu" id="dropdown">
+                                               <button class="dropdown-item" id="clearnots" onclick=clrnots(this)>Clear all</button>
+                                               
+                                            </div>
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                               
+                              <select class="custom-select" id="srch"></select>&nbsp;
+                            <button class="btn btn-outline-danger my-2 my-sm-0" style="color:white" id="srchbtn">Search by category</button>&nbsp;&nbsp;&nbsp;&nbsp;
     <span style="visibility: hidden;height:0px" id="uid">{{user.id}}</span>
                               <form class="form-inline my-2 my-lg-0">
-                                  <a href="/" class="btn btn-warning">Logout</a>&nbsp;&nbsp;&nbsp;
+                                  
+                                  <a href="/" id="lgout" class="btn btn-warning">Logout</a>&nbsp;&nbsp;&nbsp;
                                   <a href="/cart" class="btn btn-success">Go to cart</a>&nbsp;&nbsp;&nbsp;
-                                <h5>Hello <span id="uname">{{user.username}}</span></h5>
+                                <h5 style="color:white">Hello <span id="uname">{{user.username}}</span></h5>
                               </form>
                             </div>
                     </nav>
     <br/>
-    <div class="container">
-        <div class="row">
-            <div class="col"></div>
-            <div class="col-8">
-                
-                            <select class="custom-select" id="srch"></select>&nbsp;
-                            <button class="btn btn-outline-secondary my-2 my-sm-0" id="srchbtn">Search by category</button>
-                            
-            </div>
-            <div class="col"></div>
-        </div>
-    </div><br/><br/>
+    
     <div class="container border border-success" id="srchcon" style="visibility:hidden">
-        <div class="row"> &nbsp;Search results</div>
+        <div class="row"> <div class="col">Search results</div></div>
         <div class="row pt-3" id="srchmain">
 
         </div>
@@ -82,6 +87,20 @@
         
     </div>
 </div>
+<br/><br/><br/>
+<footer class="footer">
+      <div class="container">
+          <div class="row text-center">
+              <div class="col"><span class="text-muted">You have reached the end :) </span></div>
+              
+              
+
+              
+          </div>
+        
+      </div>
+      <br/>
+    </footer>
 <script>
     $(function(){
         (function(){
@@ -137,6 +156,34 @@
             })
          }
         })()
+        window.delnot=function(el,i){
+            $(el).parent().remove()
+            $.get(`/delnot?id=${i}`,(x)=>{})
+        }
+        window.clrnots=function(el){
+            $(el).parent().remove()
+            $.get(`/clearnots?id={{user.id}}`,(x)=>{})
+        }
+        
+        $.get('/getnots?uid={{user.id}}',(nots)=>{
+            if(nots.length==0){
+                
+            }
+            else{
+                $('#noti').css('color','yellow')
+                str=''
+                for(let i=0;i<nots.length;i++){
+                    str+=`<a class="dropdown-item" href="#">${nots[i].message}&nbsp;&nbsp;&nbsp;<i class="fa fa-times" style="color:red" onclick=delnot(this,${nots[i].notid})></i></a>
+                    `
+                }
+                $('#dropdown').append(str)
+            }
+        })
+        $('#lgout').click(function(){
+            $.get('/user/logout',()=>{
+
+            })
+        })
        $('#srchbtn').click(function(){
            $('#srchmain').empty()
            $.get(`/getbycat?catname=${$('#srch').val()}`,(pros)=>{
@@ -162,7 +209,9 @@
                $('#srchmain').html(y)
            })
        })
-         
+         $('#drop').click(function(){
+             $('#noti').css('color','white')
+         })
     })
 </script>
 </body>
