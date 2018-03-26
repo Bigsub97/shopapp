@@ -290,6 +290,21 @@ app.get('/sendall',(req,res)=>{
         console.log('Error finding users')
     })
 })
+app.get('/psrch',(req,res)=>{
+    Products.findAll().then((pros)=>{
+        p=[]
+        let k=0
+        for(let i=0;i<pros.length;i++){
+            if(pros[i].name.indexOf(req.query.substr)!=-1||pros[i].vendor.indexOf(req.query.substr)!=-1){
+                p[k]=pros[i]
+                k++
+            }
+        }
+        res.send(p)
+    }).catch((err)=>{
+        console.log('Error getting searched product(s)')
+    })
+})
 app.listen(config.PORT, () => {
     console.log("Listening on port " + config.PORT);
   });
