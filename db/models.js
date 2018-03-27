@@ -70,8 +70,8 @@ const Products = db.define('products', {
     name:DataTypes.STRING,
     vendor:DataTypes.STRING,
     price:DataTypes.INTEGER,
-    cat:DataTypes.STRING
-    
+    cat:DataTypes.STRING,
+    outofstock: DataTypes.BOOLEAN
 })
 const Requests = db.define('requests', {
     id: {

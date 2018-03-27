@@ -125,24 +125,13 @@
     $(function(){
         (function(){
              $.get('/allpros',(pros)=>{
-            let r=''
+        
             let q=''
-            $('#pros').empty()
+        
             $('#main').empty()
             
             for(let i=0;i<pros.length;i++){
-                r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">${pros[i].name}</h5>
-                    <p class="card-text">Vendor- ${pros[i].vendor}</p>
-                    <p class="card-text">Price- ${pros[i].price}</p>
-                    <p class="card-text">Category- ${pros[i].cat}
-                    </p>
-                </div>
-                </div><br/>
-            </div>`
+                
             q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
             <div class="card" style="width: 18rem;">
             <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
@@ -151,14 +140,20 @@
                 <p class="card-text">Vendor- ${pros[i].vendor}</p>
                 <p class="card-text">Price- ${pros[i].price}</p>
                 <p class="card-text">Category- ${pros[i].cat}
-                </p>
-                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
-            </div>
+                </p>`
+                if(pros[i].outofstock){
+                    q+=`<button class="btn btn-danger" disabled>Out of stock</button>`
+                }
+                else{
+                    q+=`<button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>`
+                }
+                
+            q+=`</div>
             </div>
             <br/>
         </div>`
             }
-            $('#pros').append(r)
+            
             $('#main').append(q)
         })
             $.get('/allcats',(cats)=>{
@@ -217,13 +212,18 @@
                 <p class="card-text">Vendor- ${pros[i].vendor}</p>
                 <p class="card-text">Price- ${pros[i].price}</p>
                 <p class="card-text">Category- ${pros[i].cat}
-                </p>
-                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
-            </div>
+                </p>`
+                if(pros[i].outofstock){
+                    y+=`<button class="btn btn-danger" disabled>Out of stock</button>`
+                }
+                else{
+                    y+=`<button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>`
+                }
+                
+            y+=`</div>
             </div>
             <br/>
-        </div>
-                   `
+        </div>`
                }
                $('#srchcon').css('visibility','visible')
                $('#srchmain').html(y)
@@ -237,7 +237,7 @@
                  console.log(pros)
                  let y=''
                for(let i=0;i<pros.length;i++){
-                   y+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
+                    y+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
             <div class="card" style="width: 18rem;">
             <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
             <div class="card-body" pid="${pros[i].id}" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
@@ -245,13 +245,18 @@
                 <p class="card-text">Vendor- ${pros[i].vendor}</p>
                 <p class="card-text">Price- ${pros[i].price}</p>
                 <p class="card-text">Category- ${pros[i].cat}
-                </p>
-                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
-            </div>
+                </p>`
+                if(pros[i].outofstock){
+                    y+=`<button class="btn btn-danger" disabled>Out of stock</button>`
+                }
+                else{
+                    y+=`<button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>`
+                }
+                
+            y+=`</div>
             </div>
             <br/>
-        </div>
-                   `
+        </div>`
                }
                $('#srchcon').css('visibility','visible')
                $('#srchmain').html(y)

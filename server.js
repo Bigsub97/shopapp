@@ -70,6 +70,7 @@ app.get('/addpro',(req,res)=>{
         vendor:req.query.vendor,
         price:parseInt(req.query.price),
         cat:req.query.cat,
+        outofstock:false
     }).then((proa)=>{
         res.send(proa)
     }).catch((err)=>res.send('Error adding product'))
@@ -146,17 +147,6 @@ app.get('/delreq',(req,res)=>{
     }).catch((err)=>res.send('Error deleting request'))
 })
 
-
-
-app.get('/auth/facebook',
-    passport.authenticate('facebook'));
-  
-  app.get('/auth/facebook/callback',
-    passport.authenticate('facebook', { failureRedirect: '/login' }),
-    function(req, res) {
-      // Successful authentication, redirect home.
-      res.redirect('/');
-    });
 
 
 
@@ -295,7 +285,7 @@ app.get('/psrch',(req,res)=>{
         p=[]
         let k=0
         for(let i=0;i<pros.length;i++){
-            if(pros[i].name.indexOf(req.query.substr)!=-1||pros[i].vendor.indexOf(req.query.substr)!=-1){
+            if(pros[i].name.toLowerCase().indexOf(req.query.substr.toLowerCase())!=-1||pros[i].vendor.indexOf(req.query.substr)!=-1){
                 p[k]=pros[i]
                 k++
             }
@@ -303,6 +293,56 @@ app.get('/psrch',(req,res)=>{
         res.send(p)
     }).catch((err)=>{
         console.log('Error getting searched product(s)')
+    })
+})
+app.get('/changeoos',(req,res)=>{
+    Products.findOne({
+        where:{
+            id:parseInt(req.query.pid)
+        }
+    }).then((p)=>{
+        if(p.outofstock){
+            Products.update({
+                outofstock: false,
+              }, {
+                where: {
+                  id: parseInt(req.query.pid)
+                }
+              }
+            ).then((p)=>{
+                res.send(p)
+            }).catch((err)=>{
+                console.log('Error in updating in if')
+            })
+        }
+        else{
+            Products.update({
+                outofstock: true,
+              }, {
+                where: {
+                  id: parseInt(req.query.pid)
+                }
+              }
+            ).then((p)=>{
+                res.send(p)
+            }).catch((err)=>{
+                console.log('Error in updating in else')
+            })
+        }
+        
+    }).catch((err)=>{
+        console.log('Error changing out of stock condition')
+    })
+})
+app.get('/getisoos',(req,res)=>{
+    Products.findOne({
+        where:{
+            id:parseInt(req.query.pid)
+        }
+    }).then((p)=>{
+        res.send(p.outofstock)
+    }).catch((err)=>{
+        console.log('Error getting is out of stock')
     })
 })
 app.listen(config.PORT, () => {

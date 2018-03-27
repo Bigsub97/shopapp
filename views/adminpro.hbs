@@ -68,44 +68,66 @@
             $('#cats').append(str)
             $('#procat').append(p)
         })
+        window.oos=function(el,i){
+            $.get(`/getisoos?pid=${i}`,(isoos)=>{
+                if(isoos){
+                console.log('change to white')
+                $(el).parent().parent().css('color','black')
+                $(el).parent().parent().css('background-color','white')
+                $(el).text("Out Of Stock")
+                $.get(`/changeoos?pid=${i}`,(c)=>{})
+            }
+            else{
+                $(el).parent().parent().css('color','white')
+                $(el).parent().parent().css('background-color','black')
+                $(el).text("Back In Stock")
+                $.get(`/changeoos?pid=${i}`,(c)=>{})
+            }
+            })
+            
+            
+        }
         $.get('/allpros',(pros)=>{
             let r=''
-            let q=''
+            
             $('#pros').empty()
-            $('#main').empty()
+           
             
             for(let i=0;i<pros.length;i++){
                 r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
                 <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title">Name- ${pros[i].name}</h5>
+                    <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">`
+                    if(pros[i].outofstock){
+                        r+=`<div class="card-body" style="color:white;background-color:black">`
+                    }
+                    else{
+                        r+=`<div class="card-body">`
+                    }
+                
+                    r+=`<h5 class="card-title">Name- ${pros[i].name}</h5>
                     <p class="card-text">Vendor- ${pros[i].vendor}</p>
                     <p class="card-text">Price- ${pros[i].price}</p>
                     <p class="card-text">Category- ${pros[i].cat}
                     </p>
                     <p class="card-text"><button class="btn btn-danger" onclick=delpro(this,${pros[i].id})>Delete</button>
                 </p>
+                <p class="card-text">`
+                    if(pros[i].outofstock){
+                        r+=`<button class="btn btn-success" onclick=oos(this,${pros[i].id})>Back In Stock</button>`
+                    }
+                    else{
+                        r+=`<button class="btn btn-success" onclick=oos(this,${pros[i].id})>Out Of Stock</button>`
+                    }
+                    
+                r+=`</p>
                 </div>
                 </div><br/>
             </div>`
-            q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
-            <div class="card" style="width: 18rem;">
-             <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
-            <div class="card-body" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
-                <h5 class="card-title">Name- ${pros[i].name}</h5>
-                <p class="card-text">Vendor- ${pros[i].vendor}</p>
-                <p class="card-text">Price- ${pros[i].price}</p>
-                <p class="card-text">Category- ${pros[i].cat}
-                </p>
-                <button class="btn btn-primary" onclick="addtocart(this)">Add to cart</button>
-            </div>
-            </div>
-            <br/>
-        </div>`
+            
             }
+            
             $('#pros').append(r)
-            $('#main').append(q)
+            
         })
         
         })()
@@ -122,8 +144,10 @@
                 </p>
                 <p class="card-text"><button class="btn btn-danger" onclick=delpro(this,${proa.id})>Delete</button>
                 </p>
+                <p class="card-text"><button class="btn btn-success" onclick=oos(this,${proa.id})>Out Of Stock</button>
+                </p>
             </div>
-            </div>
+            </div><br/>
         </div>`)
         })
     })
