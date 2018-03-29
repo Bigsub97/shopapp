@@ -28,7 +28,6 @@ app.use('/admin', require('./routes/admin'))
 
 
 
-
 app.use('/',express.static(__dirname+'/views'))
 app.use('/admin',express.static(__dirname+'/views'))
 
@@ -111,22 +110,6 @@ app.get('/getcart',(req,res)=>{
     }).catch((err)=>res.send('Error getting cart'))
 })
 
-// app.get('/checkuser',(req,res)=>{
-    
-//     User.findOne({
-//         where:{
-//             username:req.query.uname
-//         }}
-//     ).then((user)=>{
-//         console.log(user)
-//         if(user){
-//             res.send(true)
-//         }
-//         else{
-//             res.send(false)
-//         }
-//     }).catch((err)=>res.send('Error checking user'))
-// })
 
 app.get('/rem',(req,res)=>{
     Usercart.destroy({
@@ -285,7 +268,7 @@ app.get('/psrch',(req,res)=>{
         p=[]
         let k=0
         for(let i=0;i<pros.length;i++){
-            if(pros[i].name.toLowerCase().indexOf(req.query.substr.toLowerCase())!=-1||pros[i].vendor.indexOf(req.query.substr)!=-1){
+            if(pros[i].name.toLowerCase().indexOf(req.query.substr.toLowerCase())!=-1||pros[i].vendor.toLowerCase().indexOf(req.query.substr.toLowerCase())!=-1){
                 p[k]=pros[i]
                 k++
             }
@@ -343,6 +326,85 @@ app.get('/getisoos',(req,res)=>{
         res.send(p.outofstock)
     }).catch((err)=>{
         console.log('Error getting is out of stock')
+    })
+})
+app.get('/checkuser',(req,res)=>{
+    User.findOne({
+        where:{
+            username:req.query.uname
+        }
+    }).then((user)=>{
+        if(user==null){
+            res.send(false)
+        }
+        else{
+            res.send(true)
+        }
+    }).catch((err)=>{
+        console.log('Error checking user')
+    })
+})
+const path=require('path')
+const multer=require('multer')
+const fs=require('fs')
+const upload=multer({dest:'uploads/'})
+app.post('/up',upload.single('photo'),(req,res)=>{
+    fs.readFile(req.file.path,(err,data)=>{
+        fs.writeFile('public_static/images/'+req.file.originalname,data,(err)=>{
+            fs.unlink(req.file.path,()=>{})
+        })
+    })
+    User.update({
+        isImg:true,
+        image:`/images/${req.file.originalname}`
+    },{
+        where:{
+            id:parseInt(req.user.id)
+        }
+    }).then((u)=>{
+        User.findOne({
+            where:{
+                id:parseInt(req.user.id)
+            }
+        }).then((u)=>{
+            res.render('profile',{user:u})
+        }).catch((err)=>{
+            console.log('Error finding user after updating image')
+        })
+        
+    }).catch((err)=>{
+        console.log('Error updating user')
+    })
+})
+app.use('/',express.static(path.join(__dirname,'public_static')))
+
+
+app.get('/changeadr',(req,res)=>{
+    User.update({
+        address:req.query.newadr
+    },{
+        where:{
+            id:parseInt(req.query.uid)
+        }
+    }).then((u)=>{
+        res.send('Changed address')
+    }).catch((err)=>{
+        console.log('Error updating address');
+        
+    })
+})
+app.get('/changemob',(req,res)=>{
+    User.update({
+        mobno:parseInt(req.query.newmob)
+    },{
+        where:{
+            id:parseInt(req.query.uid)
+        }
+    }).then((u)=>{
+        res.send('Changed mobile number')
+    }).catch((err)=>{
+        console.log('Error updating mobile number');
+        
     })
 })
 app.listen(config.PORT, () => {

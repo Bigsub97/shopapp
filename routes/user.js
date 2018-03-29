@@ -15,10 +15,22 @@ route.post('/signup', (req, res) => {
         password: req.body.password,
         address:req.body.addr,
         mobno:req.body.mobno,
-        role:req.body.username
+        role:req.body.username,
+        isImg:false,
+        image:'https://openclipart.org/download/247324/abstract-user-flat-1.svg'
     }).then((user) => {
         res.redirect('/user/signin')
     })
+})
+route.get('/profile',(req,res)=>{
+    if(!req.user){
+        res.redirect('/user/signin')
+    }
+    else{
+        
+            res.render('profile',{user:req.user})
+        
+    }
 })
 
 route.post('/signin',passport.authenticate('local', {

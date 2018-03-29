@@ -94,6 +94,13 @@
 
 <script>
     $("#formid").submit(function(e){
+        $.get(`/checkuser?uname=${$('#uname').val()}`,(exists)=>{
+            if(exists){
+                window.alert('Sorry, this username exists')
+                e.preventDefault()
+            }
+            else{}
+        })
            
               if($('#pass').val()!=$('#cpass').val()){
             window.alert("Passwords don't match")

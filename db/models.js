@@ -21,7 +21,9 @@ const User = db.define('users',{
         type:DataTypes.STRING,
         allowNull:true
     },
-    password:DataTypes.STRING
+    password:DataTypes.STRING,
+    isImg:DataTypes.BOOLEAN,
+    image:DataTypes.STRING
 })
 const Notifications = db.define('notifications',{
     notid: {
