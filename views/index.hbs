@@ -15,6 +15,51 @@
             visibility: hidden;
             height: 0px
         }
+        
+        body{
+            background: #fff;
+            }
+            .box {
+            transition: box-shadow .3s;
+            width: 100%;
+            margin: 10px;
+            border-radius:10px;
+            border: 1px solid #ccc;
+            background: #fff;
+            float: left;
+            
+            }
+            .box:hover {
+            box-shadow: 0 0 20px rgba(33,33,33,.2); 
+            }
+
+
+                        * {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            }
+
+            .item {
+            position: relative;
+            overflow: hidden;
+            }
+            .item img {
+            max-width: 100%;
+            
+            -moz-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 0.3s;
+            }
+            .item:hover img {
+            -moz-transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+            }
+            
+    
     </style>
     {{!-- <script src="script.js"></script> --}}
 </head>
@@ -74,18 +119,18 @@
         </div> --}}
         {{!-- To be taken --}}
     </div>
-</div>
+</div><br/><br/>
 <script>
     $(function(){
         (function(){
              $.get('/allpros',(pros)=>{
             let r=''
-            let q=''
+            
             $('#main').empty()
             console.log(pros)
             for(let i=0;i<pros.length;i++){
                 r+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
-                <div class="card" style="width: 18rem;">
+                <div class="card box pt-1" style="width: 18rem;"><div class="item">
                     <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">${pros[i].name}</h5>
@@ -94,21 +139,9 @@
                     <p class="card-text">Category- ${pros[i].cat}
                     </p>
                 </div>
-                </div><br/>
+                </div></div><br/>
             </div>`
-            q+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
-            <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
-            <div class="card-body" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
-                <h5 class="card-title">${pros[i].name}</h5>
-                <p class="card-text">Vendor- ${pros[i].vendor}</p>
-                <p class="card-text">Price- ${pros[i].price}</p>
-                <p class="card-text">Category- ${pros[i].cat}
-                </p>
-            </div>
-            </div>
-            <br/>
-        </div>`
+            
             }
             
             $('#main').append(r)

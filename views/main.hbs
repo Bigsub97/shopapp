@@ -139,7 +139,7 @@
                     
     <br/>
     
-    <div class="container border border-success" id="srchcon" style="visibility:hidden">
+    <div class="container" id="srchcon" style="visibility:hidden;border:3px rgb(116, 231, 116) dashed">
         <div class="row"> <div class="col" id="srchtxt">Search results</div></div>
         <div class="row pt-3" id="srchmain">
 
@@ -259,7 +259,7 @@
                for(let i=0;i<pros.length;i++){
                    y+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
             <div class="card box pt-1" style="width: 18rem;">
-            <div class="item"><img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap"></div>
+            <div class="item"><img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
             <div class="card-body" pid="${pros[i].id}" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
                 <h5 class="card-title">${pros[i].name}</h5>
                 <p class="card-text">Vendor- ${pros[i].vendor}</p>
@@ -274,7 +274,7 @@
                 }
                 
             y+=`</div>
-            </div>
+            </div></div>
             <br/>
         </div>`
                }
@@ -299,7 +299,7 @@
                    
                     y+=`<div class="col-xl-4 col-lg-4 col-md-6 col-sm-10 col-xs-10">
             <div class="card box pt-1" style="width: 18rem;">
-            <div class="item"><img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap"></div>
+            <div class="item"><img class="card-img-top" src="${pros[i].imgurl}" style="width:100%" alt="Card image cap">
             <div class="card-body" pid="${pros[i].id}" name="${pros[i].name}" vendor="${pros[i].vendor}" price="${pros[i].price}" cat="${pros[i].cat}">
                 <h5 class="card-title">${pros[i].name}</h5>
                 <p class="card-text">Vendor- ${pros[i].vendor}</p>
@@ -314,7 +314,7 @@
                 }
                 
             y+=`</div>
-            </div>
+            </div></div>
             <br/>
         </div>`
                }
